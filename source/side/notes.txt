@@ -1,0 +1,5 @@
+If you want to check if the message author is the bot use 
+
+`if (message.author.bot) {
+    return;
+}`
