@@ -1,5 +1,16 @@
-If you want to check if the message author is the bot use 
+} catch (error) {
+	console.error((consoleColour.mind)(`[Error] : `) + "Invalid Token: ", error.message);
+	if (error.message === DiscordjsError(ErrorCodes.TokenInvalid)) {
+		console.log("Please check your bot token and try again.");
+		 Xeroz();
+	  }
+	 Xeroz();
+};
 
-`if (message.author.bot) {
-    return;
-}`
+,{ shell: true }, (error, stdout, stderr) => {
+	if (error) {
+	  console.error((consoleColour.mind)('[Error] : ') + 'executing TokenError.bat:', error);
+	} else {
+	  console.log(stdout);
+	}
+})
