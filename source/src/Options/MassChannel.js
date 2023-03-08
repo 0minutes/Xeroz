@@ -1,7 +1,8 @@
 const consoleColour = require('gradient-string');
 const {ChannelType} = require('discord.js');
-const { sleep } = require('./CheckGuild');
-const { checkGuild } = require("./CheckGuild")
+const { sleep } = require('./ErrorHandlers/CheckGuild');
+const { checkGuild } = require("./ErrorHandlers/CheckGuild")
+const {checkInt} = require("./ErrorHandlers/isInteger");
 
 async function createChannel(guildId, name, amount, xeroz)
 {
@@ -9,6 +10,13 @@ async function createChannel(guildId, name, amount, xeroz)
 
     try {
       await checkGuild(guildId, xeroz);
+    } catch (error) {
+      console.error;
+      return;
+    }
+
+    try {
+      await checkInt(amount, xeroz);
     } catch (error) {
       console.error;
       return;

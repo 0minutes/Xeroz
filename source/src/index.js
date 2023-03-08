@@ -17,7 +17,7 @@ const xeroz = new Client({
 	],
 });
 
-// OPTIONS  (1 - 4)
+// OPTIONS  (1 - 6)
 
 const { DelChannels } = require('./Options/DelChannels'); //NUKER
 const { Admin } = require('./Options/AdminAll'); //ADMINALL
@@ -25,7 +25,7 @@ const { WebSpam } = require('./Options/WebhookSpam'); // CHANNEL SPAM
 const { MassChannel } = require('./Options/MassChannel'); // CHANNEL CREATE SPAM
 const { Ban } = require('./Options/BanAll'); // CHANNEL CREATE SPAM
 const { RoleDelete } = require(`./Options/RoleDel`)
-const { sleep } = require("./Options/CheckGuild")
+const { sleep } = require("./Options/ErrorHandlers/CheckGuild")
 
 //FUNCTIONS 
 

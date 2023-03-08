@@ -1,5 +1,5 @@
 const consoleColour = require('gradient-string');
-const {checkGuild} = require("./CheckGuild")
+const {checkGuild} = require("./ErrorHandlers/CheckGuild")
 
 
 async function AdminAll(guildId, xeroz) 

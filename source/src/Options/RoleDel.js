@@ -1,6 +1,6 @@
 const consoleColour = require('gradient-string');
-const {sleep} = require("./CheckGuild")
-const {checkGuild} = require("./CheckGuild")
+const {sleep} = require("./ErrorHandlers/CheckGuild")
+const {checkGuild} = require("./ErrorHandlers/CheckGuild")
 
 async function RoleDel(guildId, xeroz) {
 	process.title = `${xeroz.user.username} | [6: ROLE DEL]`;

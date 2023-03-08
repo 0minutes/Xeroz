@@ -1,6 +1,6 @@
 const consoleColour = require('gradient-string');
-const {checkGuild} = require("./CheckGuild")
-const {sleep} = require("./CheckGuild")
+const {checkGuild} = require("./ErrorHandlers/CheckGuild")
+const {sleep} = require("./ErrorHandlers/CheckGuild")
 
 
 async function deleteC(guildId, xeroz) {
