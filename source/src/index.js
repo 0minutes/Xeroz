@@ -4,7 +4,6 @@ require("dotenv").config();
 const { ChannelType, Client, GatewayIntentBits, DiscordjsError, disableValidators, PermissionsBitField  } = require('discord.js');
 const consoleColour = require('gradient-string');
 const q = require('readline-sync');
-const Token = q.question((consoleColour.mind) ("[Token] > ")); console.clear();
 
 
 // CREATING THE CLIENT
@@ -26,16 +25,24 @@ const { WebSpam } = require('./Options/WebhookSpam'); // CHANNEL SPAM
 const { MassChannel } = require('./Options/MassChannel'); // CHANNEL CREATE SPAM
 const { Ban } = require('./Options/BanAll'); // CHANNEL CREATE SPAM
 const { RoleDelete } = require(`./Options/RoleDel`)
+const { sleep } = require("./Options/CheckGuild")
+
 //FUNCTIONS 
 
-async function Login()
-{
-	await xeroz.login(Token)
-	.catch((error) => {
-	console.error((consoleColour.mind)(`[Error] : `) + "Invalid Token:", error.message);
-	q.question((consoleColour.mind)(`[!] : `) + "Press ENTER to exit...");
-	});
+async function Login() {
+    let validToken = false;
+    while (!validToken) {
+        const Token = q.question((consoleColour.mind)("[Token] > "));
+        console.clear();
+        try {
+            await xeroz.login(Token);
+            validToken = true;
+        } catch (error) {
+            console.error((consoleColour.mind)(`[Error] : `) + "Invalid Token:", error.message);
+        }
+    }
 }
+
 
 function OptionsUI()
 {
@@ -59,15 +66,8 @@ function OptionsUI()
 function MainScreen()
 {
 	console.clear();
-	process.title = ` ${xeroz.user.username} | Num Of Guilds: ${xeroz.guilds.cache.size}`;
-
-}
-
-function sleep(ms) 
-{
-
-    return new Promise(resolve => setTimeout(resolve, ms));
-
+	process.title = ` ${xeroz.user.username} | Currently in: ${xeroz.guilds.cache.size} Guild(s)`;
+ 
 }
 
 async function Xeroz()
